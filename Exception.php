@@ -21,5 +21,8 @@ namespace BLKTech\HTTP;
  */
  
 class Exception extends \BLKTech\Exception {
-
+    public static function throwByHTTPCode($code)
+    {
+        throw new self(Response::getCodeMessage($code), 10000+$code);
+    }
 }
