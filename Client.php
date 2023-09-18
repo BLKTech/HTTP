@@ -19,40 +19,39 @@ namespace BLKTech\HTTP;
  *
  * @author TheKito < blankitoracing@gmail.com >
  */
- 
-class Client 
-{
 
-    
+class Client
+{
     public static function call(Request $request, $deep = 10)
     {
-        $curl = curl_init();       
-        
+        $curl = curl_init();
+
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);        
+        curl_setopt($curl, CURLOPT_HEADER, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod()->__toString());
         curl_setopt($curl, CURLOPT_URL, $request->getURL()->__toString());
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeader()->getList()); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeader()->getList());
         $body = $request->getBody()->__toString();
-        curl_setopt($curl, CURLOPT_POST, $body!==null);        
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);        
-        
+        curl_setopt($curl, CURLOPT_POST, $body!==null);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
         $cr = curl_exec($curl);
         $hs = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $header = Header::getFromString(substr($cr, 0, $hs));        
+        $header = Header::getFromString(substr($cr, 0, $hs));
         $body = Body::fromString(substr($cr, $hs));
-        unset($hs);        
+        unset($hs);
         unset($cr);
-        
-        if($header->get('location')!==null && $deep>0)        
-            return self::call (new Request(
-                    Method::GET(), 
-                    $request->getURL()->combineURL(\BLKTech\DataTypes\URL::getFromString($headers->get('location'))), 
-                    new Header(array('Referer'=>$request->getURL()->__toString())), 
-                    null
-                ), $deep-1);
-        
-        
-        return new Response(curl_getinfo($curl, CURLINFO_HTTP_CODE), $header, $body);        
+
+        if($header->get('location')!==null && $deep>0) {
+            return self::call(new Request(
+                Method::GET(),
+                $request->getURL()->combineURL(\BLKTech\DataTypes\URL::getFromString($headers->get('location'))),
+                new Header(array('Referer'=>$request->getURL()->__toString())),
+                null
+            ), $deep-1);
+        }
+
+
+        return new Response(curl_getinfo($curl, CURLINFO_HTTP_CODE), $header, $body);
     }
 }

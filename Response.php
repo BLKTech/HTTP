@@ -19,21 +19,24 @@ namespace BLKTech\HTTP;
  *
  * @author TheKito < blankitoracing@gmail.com >
  */
- 
+
 class Response extends Message
 {
     private $code;
- 
-    public function __construct($code, Header $header, $payload) 
+
+    public function __construct($code, Header $header, $payload)
     {
-        parent::__construct($header, $payload);       
+        parent::__construct($header, $payload);
         $this->code = $code;
     }
 
-    public function getCode() {return $this->code;}
-    
+    public function getCode()
+    {
+        return $this->code;
+    }
 
-    public static final function getCodeMessage($code)
+
+    final public static function getCodeMessage($code)
     {
         $_ = array(
             100 => 'Continue',
@@ -111,9 +114,10 @@ class Response extends Message
             598 => 'Network read timeout error',
             599 => 'Network connect timeout error',
         );
-        
-        if(isset($_[$code]))
+
+        if(isset($_[$code])) {
             return $_[$code];
+        }
     }
-    
+
 }
