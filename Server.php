@@ -61,7 +61,7 @@ abstract class Server
             header($headerName . ': ' . $headerValue, true, $response->getCode());
         }
 
-        if(Method::getFromGlobals()!='HEAD') {
+        if(Method::getFromGlobals() != 'HEAD') {
             $response->getBody()->dump();
         } else {
             http_response_code(204);

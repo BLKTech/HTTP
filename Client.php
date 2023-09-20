@@ -32,7 +32,7 @@ class Client
         curl_setopt($curl, CURLOPT_URL, $request->getURL()->__toString());
         curl_setopt($curl, CURLOPT_HTTPHEADER, $request->getHeader()->getList());
         $body = $request->getBody()->__toString();
-        curl_setopt($curl, CURLOPT_POST, $body!==null);
+        curl_setopt($curl, CURLOPT_POST, $body !== null);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
 
         $cr = curl_exec($curl);
@@ -42,13 +42,13 @@ class Client
         unset($hs);
         unset($cr);
 
-        if($header->get('location')!==null && $deep>0) {
+        if($header->get('location') !== null && $deep > 0) {
             return self::call(new Request(
                 Method::GET(),
                 $request->getURL()->combineURL(\BLKTech\DataTypes\URL::getFromString($headers->get('location'))),
-                new Header(array('Referer'=>$request->getURL()->__toString())),
+                new Header(array('Referer' => $request->getURL()->__toString())),
                 null
-            ), $deep-1);
+            ), $deep - 1);
         }
 
 
